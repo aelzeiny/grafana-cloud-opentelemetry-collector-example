@@ -1,0 +1,27 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 5000:5000
+    depends_on:
+      - collector
+
+  # will spam "curl -X GET http://app:5000/rolldice" lol.
+  spammer:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile_spammer
+
+    depends_on:
+      - app
+
+  # observability services
+  collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command:
+      - --config=/etc/otel-collector-config.yaml
+    volumes:
+      - ./config/otel-collector/config-cloud.yaml:/etc/otel-collector-config.yaml

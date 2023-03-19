@@ -1,0 +1,8 @@
+__pycache__
+env
+venv
+.DS_STORE
+config/tempo/data
+config/loki/data
+.vscode
+.idea

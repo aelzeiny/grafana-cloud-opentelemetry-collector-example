@@ -1,0 +1,9 @@
+
+FROM python:slim-buster
+
+WORKDIR app
+
+RUN pip install --no-cache-dir requests
+COPY spammer.py .
+
+CMD ["python", "spammer.py"]
