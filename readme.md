@@ -7,8 +7,10 @@ See also [Connect OpenTelemetry Collector to Grafana Cloud databases](https://gr
 Run:
 
 ```
-docker-compose -f docker-compose-cloud.yml up
+docker-compose up
 ```
+
+The core config file is located at ./config/otel-collector/config-cloud.yaml.
 
 ### My Graphana Cloud Variables
 
