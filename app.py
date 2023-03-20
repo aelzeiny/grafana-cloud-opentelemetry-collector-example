@@ -1,9 +1,11 @@
 # These are the necessary import declarations
-from opentelemetry import trace
+from opentelemetry import trace, context
 from opentelemetry import metrics
+import otel_lib
+from opentelemetry.trace import NonRecordingSpan
 
 from random import randint
-from flask import Flask
+from flask import Flask, request
 
 tracer = trace.get_tracer(__name__)
 # Acquire a meter.
@@ -16,6 +18,17 @@ roll_counter = meter.create_counter(
 )
 
 app = Flask(__name__)
+
+
+def set_opentelemetry_context(*_, **__):
+    serialized_ctx = request.headers.get('_OTEL_', None)
+    if serialized_ctx:
+        span_ctx = otel_lib.deserialize_ctx(serialized_ctx)
+        ctx = trace.set_span_in_context(NonRecordingSpan(span_ctx))
+        context.attach(ctx)
+
+
+app.before_request_funcs.setdefault(None, []).insert(0, set_opentelemetry_context)
 
 
 @app.route("/rolldice")
